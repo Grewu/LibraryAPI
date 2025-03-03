@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db-postgres:5432/books-storage-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: true
+  security:
+    secret: 244226452948404D6351655468576D5A7134743777217A25432A462D4A614E645267556A586E3272357538782F413F4428472B4B6250655368566D5970337336d
+    issuer: Modsen
+  kafka:
+    bootstrap-servers: "modsen-kafka-service-1:9092"
+
+server:
+  port: 8082
+
+topic:
+  book-created: book-created

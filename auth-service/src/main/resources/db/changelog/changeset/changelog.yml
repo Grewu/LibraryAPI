@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: homework-2-create-types-table
+      author: Pavel Gurevich
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: ./sql/01.create-types-table.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: homework-2-create-roles-tables
+      author: Pavel Gurevich
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: ./sql/03.create-roles-table.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: homework-2-create-privileges-tables
+      author: Pavel Gurevich
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: ./sql/04.create-privileges-table.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: homework-2-create-role-privilege-tables
+      author: Pavel Gurevich
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: ./sql/05.create-role-privilege.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: homework-2-create-users-table
+      author: Pavel Gurevich
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: ./sql/06.create-users-table.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: homework-2-add-data-tables
+      author: Pavel Gurevich
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: ./sql/12.add-data-tables.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: homework-2-create-index-table-tables
+      author: Pavel Gurevich
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: ./sql/13.create-index-table.sql
+            relativeToChangelogFile: true

@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db-postgres:5432/books-tracker-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: true
+  security:
+    secret: 244226452948404D6351655468576D5A7134743777217A25432A462D4A614E645267556A586E3272357538782F413F4428472B4B6250655368566D5970337336d
+    issuer: Modsen
+  kafka:
+    bootstrap-servers: "modsen-kafka-service-1:9092"
+    consumer:
+      group-id: book-tracker-group
+      auto-offset-reset: latest
+      enable-auto-commit: true
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+book:
+  default:
+    return-days: 30
+
+book-storage-service:
+  url: http://book-storage-service:8082/api/v0/books
+
+
+server:
+  port: 8083

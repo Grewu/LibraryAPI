@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: book-tracker-service
+  liquibase:
+    enabled: true
+    change-log: db/changelog/db.changelog-master.yaml

@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: homework-2-create-types-table
+      author: Pavel Gurevich
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: ./sql/01.create-types-table.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: homework-2-create-books-table
+      author: Pavel Gurevich
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: ./sql/02.create-books-table.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: homework-2-add-data-tables
+      author: Pavel Gurevich
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: ./sql/12.add-data-tables.sql
+            relativeToChangelogFile: true

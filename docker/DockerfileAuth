@@ -1,0 +1,12 @@
+# 1. Build stage
+FROM gradle:jdk21-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN gradle :auth-service:build -x test && rm -rf ~/.gradle/caches ~/.gradle/wrapper
+
+# 2. Runtime-stage
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+COPY --from=builder /app/auth-service/build/libs/auth-service-1.0.0.jar ./auth-service-1.0.0.jar
+ENTRYPOINT ["java", "-jar", "auth-service-1.0.0.jar"]
+EXPOSE 9000

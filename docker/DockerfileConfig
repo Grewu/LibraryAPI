@@ -1,0 +1,12 @@
+# 1. Build stage
+FROM gradle:jdk21-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN gradle :config-service:build -x test && rm -rf ~/.gradle/caches ~/.gradle/wrapper
+
+# 2. Runtime-stage
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+COPY --from=builder /app/config-service/build/libs/config-service-1.0.0.jar ./config-service-1.0.0.jar
+ENTRYPOINT ["java", "-jar", "config-service-1.0.0.jar"]
+EXPOSE 8888

@@ -1,0 +1,6 @@
+rootProject.name = 'Modsen'
+include 'book-storage-service'
+include 'auth-service'
+include 'book-tracker-service'
+include 'config-service'
+

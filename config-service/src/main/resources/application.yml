@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: config-service
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+         native:
+          search-locations:
+           classpath:/auth-service, 
+           classpath:/book-storage-service,
+           classpath:/book-tracker-service,
+
+server:
+  port: 8888

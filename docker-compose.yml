@@ -1,0 +1,118 @@
+version: '3.9'
+
+services:
+  # PostgresSQL
+  db-postgres:
+    image: ${POSTGRES_IMAGE}
+    ports:
+      - "${DB_POSTGRES_PORT}:${DB_POSTGRES_PORT}"
+    volumes:
+      - ./database-init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 3s
+    networks:
+      - news_ntwrk
+  # Kafka Broker (без Zookeeper)
+  kafka-service:
+    image: docker.io/bitnami/kafka:3.9
+    hostname: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+    volumes:
+      - kafka_data:/bitnami/kafka
+    healthcheck:
+        test: nc -z kafka 9092
+        interval: 10s
+        retries: 5
+        start_period: 10s
+    networks:
+      - news_ntwrk
+
+  # Config Service
+  config-service:
+    image: config-service
+    build:
+      context: .
+      dockerfile: docker/DockerfileConfig
+    healthcheck:
+      test: curl http://localhost:${CONFIG_SERVICE_PORT} || exit 1
+      interval: 5s
+      timeout: 3s
+    networks:
+      - news_ntwrk
+    ports:
+      - "${CONFIG_SERVICE_PORT}:${CONFIG_SERVICE_PORT}"
+
+  # Auth Service
+  auth-service:
+    build:
+      context: .
+      dockerfile: docker/DockerfileAuth
+    image: auth-service
+    depends_on:
+      db-postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - news_ntwrk
+    ports:
+      - "${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}"
+
+  # Book Storage Service
+  book-storage-service:
+    build:
+      context: .
+      dockerfile: docker/DockerfileBookStorage
+    image: book-storage-service
+    depends_on:
+      kafka-service:
+        condition: service_started
+      db-postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+    networks:
+      - news_ntwrk
+    ports:
+      - "${BOOK_STORAGE_SERVICE_PORT}:${BOOK_STORAGE_SERVICE_PORT}"
+
+  # Book Tracker Service
+  book-tracker-service:
+    build:
+      context: .
+      dockerfile: docker/DockerfileBookTracker
+    image: book-tracker-service
+    depends_on:
+      db-postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+    networks:
+      - news_ntwrk
+    ports:
+      - "${BOOK_TRACKER_SERVICE_PORT}:${BOOK_TRACKER_SERVICE_PORT}"
+
+volumes:
+  kafka_data:
+    driver: local
+
+networks:
+  news_ntwrk:
+   driver: bridge
