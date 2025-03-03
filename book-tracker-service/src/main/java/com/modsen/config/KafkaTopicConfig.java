@@ -9,5 +9,4 @@ public class KafkaTopicConfig {
   public static final String TOPIC_BOOK_CREATED = "book-created";
   public static final String TOPIC_BOOK_DELETED = "book-deleted";
   public static final String BOOK_TRACKER_GROUP_ID = "book-tracker-group";
-
 }

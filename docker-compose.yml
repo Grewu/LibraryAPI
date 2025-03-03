@@ -3,6 +3,7 @@ version: '3.9'
 services:
   # PostgresSQL
   db-postgres:
+    container_name: db-postgres
     image: ${POSTGRES_IMAGE}
     ports:
       - "${DB_POSTGRES_PORT}:${DB_POSTGRES_PORT}"
@@ -20,6 +21,7 @@ services:
       - news_ntwrk
   # Kafka Broker (без Zookeeper)
   kafka-service:
+    container_name: kafka-service
     image: docker.io/bitnami/kafka:3.9
     hostname: kafka
     ports:
@@ -46,6 +48,7 @@ services:
 
   # Config Service
   config-service:
+    container_name: config-service
     image: config-service
     build:
       context: .
@@ -77,6 +80,7 @@ services:
 
   # Book Storage Service
   book-storage-service:
+    container_name: book-storage-service
     build:
       context: .
       dockerfile: docker/DockerfileBookStorage
@@ -95,6 +99,7 @@ services:
 
   # Book Tracker Service
   book-tracker-service:
+    container_name: book-tracker-service
     build:
       context: .
       dockerfile: docker/DockerfileBookTracker
