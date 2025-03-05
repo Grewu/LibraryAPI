@@ -4,9 +4,6 @@ spring:
     issuer: Modsen
     access: 3600000
     refresh: 2592000000
-  datasource:
-    username: test
-    password: test
   liquibase:
     change-log: changelog/db.changelog-test-master.yaml
   cloud:
